@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head_html">
+</head>
+<body>
+<div class="wrapper">
+    <!--header-->
+    <div th:replace="fragments/header :: header"></div>
+    <!--content -->
+    <div class="container" style="max-width: 1170px;">
+        <img src="https://file.hstatic.net/1000281824/file/cover_1_87a6ac90b1c94059a093003239175873.jpg" alt="">
+    </div>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-9">
+                <h3>Tất cả sản phẩm</h3>
+            </div>
+
+<!--            <div class="col-3" style="max-width: 292px;">-->
+            <!--                                <ul class="form-select" style="list-style: none">-->
+            <!--                                    <li class="nav-item dropdown">-->
+            <!--                                        <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown"-->
+            <!--                                           aria-expanded="false">-->
+            <!--                                            Tất cả-->
+            <!--                                        </a>-->
+            <!--                                        <ul class="dropdown-menu" style="&#45;&#45;bs-dropdown-min-width:16rem;">-->
+            <!--                                            <div th:each="category: ${categories}">-->
+            <!--                                            <li><a class="dropdown-item" th:href="@{'/collection/loc-san-pham?category='+ *{category.getId()}}" th:text="*{category.getCategory_name()}"></a></li>-->
+            <!--                                            </div>-->
+            <!--                                        </ul>-->
+            <!--                                    </li>-->
+            <!--                                </ul>-->
+            <!--                -->
+            <!--            </div>-->
+            <form class="col-3 " th:action="@{/collection/loc-san-pham}" method="get">
+                <div>
+                    <select name="categoryId" class="form-select" onchange="this.form.submit()">
+                        <option value="">Tất cả</option>
+                        <option th:each="category: ${categories}" th:value="${category.getId()}"
+                                th:text="${category.getCategory_name()}" th:selected="${category.getId() == categoryId}"
+                        ></option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="row mt-3">
+            <div class="col-9">
+                <h6 class="m-0"><i class="fa-solid fa-filter"></i> BỘ LỌC</h6>
+            </div>
+<!--            <div class="col-3" style="max-width: 292px;">-->
+<!--                                <ul class="form-select" style="list-style: none">-->
+<!--                                    <li class="nav-item dropdown">-->
+<!--                                        <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown"-->
+<!--                                           aria-expanded="false">-->
+<!--                                            Lọc giá-->
+<!--                                        </a>-->
+<!--                                        <ul class="dropdown-menu" style="&#45;&#45;bs-dropdown-min-width:16rem;">-->
+<!--                                                <li><a class="dropdown-item" th:href="@{/collection/loc-san-pham?order=asc&orderBy=price}">Giá tăng dần</a></li>-->
+<!--                                                <li><a class="dropdown-item" th:href="@{/collection/loc-san-pham?order=desc&orderBy=price}">Giá giảm dần</a></li>-->
+<!--                                        </ul>-->
+<!--                                    </li>-->
+<!--                                </ul>-->
+<!--            </div>-->
+            <form class="col-3" th:action="@{/collection/loc-san-pham}" method="get">
+                <div>
+                    <select name="priceSort" class="form-select" onchange="this.form.submit()">
+                        <option value="">Giá</option>
+                        <option value="asc" th:selected="${sort == 'asc'}">Giá tăng dần</option>
+                        <option value="desc" th:selected="${sort == 'desc'}">Giá giảm dần</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="container mt-3 mb-4">
+        <div class="row row-cols-5 g-5" id="productList">
+            <div class="col" th:each="product : ${productList}">
+
+                <a class="card" th:href="@{'/products/productId='+ *{product.getId()}+'&categoryId='+*{product.category.getId()} }">
+                    <div th:each="image, limit : *{product.getImages()}" th:if="${limit.index} &lt; 2">
+                        <img th:src="@{'/img/products/'+ *{image.getUrl()}}"
+                             th:alt="*{image.getName()}" th:class="${limit.index % 2 == 0 ? '' :'img-fluid'}"
+                             style="aspect-ratio: 1 / 1;">
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title" style="line-height: 1.3rem;"
+                             th:text="*{product.getName()}"></div>
+                        <div class="card-text"><span class="text-danger fw-bold"
+                                                     style="font-size: 0.9rem;"><span
+                                th:text="${#numbers.formatDecimal(product.getPrice(), 0, 'COMMA', 0, 'DEFAULT')} + ' &#x20AB;'"></span>
+                        </span>
+                            <span class="mx-2"
+                                  style="color: #333; text-decoration: line-through; font-size: 0.8rem;"
+                                  th:if="*{product.getOldPrice() != null}"
+                                  th:text="${#numbers.formatDecimal(product.getOldPrice(), 0, 'COMMA', 0, 'DEFAULT')} + ' &#x20AB;'"></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!--footer-->
+    <div th:replace="fragments/footer :: footer"></div>
+</div>
+</body>
+</html>

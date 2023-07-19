@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head_html">
+</head>
+<body>
+<div class="wrapper">
+    <!--header-->
+    <div th:replace="fragments/header :: header"></div>
+    <div class="container" style="max-width: 1170px;" th:if="${orderItems.size()>0}">
+        <!--        Thông báo-->
+        <div th:replace="alert/alert :: alert"></div>
+        <form id="deleteForm" th:action="@{/cart/delete}" method="post">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Hình ảnh</th>
+                    <th scope="col">Tên</th>
+                    <th scope="col">Giá tiền</th>
+                    <th scope="col">Số lượng</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="orderItem : ${orderItems}">
+                    <th scope="row">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" th:value="*{orderItem.getId()}"
+                                   name="selectedItems">
+                        </div>
+                    </th>
+                    <td th:each="image, limit : *{orderItem.products.getImages()}" th:if="${limit.index} &lt; 1">
+                        <img th:src="@{'/img/products/'+ *{image.getUrl()}}" th:alt="*{image.getName()}"
+                             class="product-image">
+                    </td>
+                    <td th:text="*{orderItem.products.getName()}"></td>
+
+                    <td th:text="${#numbers.formatDecimal(orderItem.getPrice(), 0, 'COMMA', 0, 'DEFAULT')} + ' &#x20AB;'"></td>
+                    <td>
+                        <input type="number" class="form-control quantity" th:value="*{orderItem.getQuantity()}">
+                    </td>
+                </tr>
+                <!-- Add more rows for additional products -->
+                </tbody>
+            </table>
+            <div class="text-end">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="selectAll" onchange="toggleCheckbox(this)">
+                    <label class="form-check-label" for="selectAll">Chọn tất cả</label>
+                </div>
+                <button type="submit" class="btn btn-danger remove-btn"><i class="fa-solid fa-trash me-2"></i>Xóa
+                </button>
+            </div>
+        </form>
+        <form th:action="@{/cart/order}" method="post">
+            <div class="text-end mt-4">
+                <h5>Total: <span th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'DEFAULT')} + ' &#x20AB;'"
+                                 id="totalPrice"></span></h5>
+                <input type="hidden" name="total" th:value="${total}"/>
+
+                <!--            <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Thanh-->
+                <!--                toán-->
+                <!--            </button>-->
+                <button class="btn btn-primary" type="submit">Thanh toán
+                </button>
+            </div>
+        </form>
+
+    </div>
+    <div th:unless="${orderItems.size() > 0}">
+        <p class="text-center text-danger fw-bold">Bạn không có đơn hàng nào!</p>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Xác nhận đơn hàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có muốn thanh toán đơn hàng này không?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <form th:action="@{/cart/order}" method="post">
+                    <input type="hidden" name="total" th:value="${total}"/>
+                    <button type="submit" class="btn btn-primary">Thanh toán</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

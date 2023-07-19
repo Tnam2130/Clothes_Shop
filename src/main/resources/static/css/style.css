@@ -1,0 +1,108 @@
+@import url(base.css);
+@import url(form.css);
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
+
+.card {
+    position: relative;
+    display: inline-block;
+    border-radius: 5px;
+    border: none;
+    -webkit-transition: var(--transition);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.card::after {
+    content: "";
+    position: absolute;
+    border-radius: 5px;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: var(--box-shadow-bottom-heavy);
+    -webkit-transition: var(--transition);
+    transition: var(--transition);
+    opacity: 0;
+}
+
+.card:hover::after {
+    opacity: 1;
+}
+
+.card .img-fluid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99;
+}
+
+.card .img-fluid:last-of-type {
+    opacity: 1;
+    transition: opacity .4s ease;
+    -moz-transition: opacity .4s ease;
+    -webkit-transition: opacity .4s ease;
+}
+
+.card:hover .img-fluid:last-of-type {
+    opacity: 0;
+}
+.product-page-line {
+    height: 16px;
+    width: 2px !important;
+    background-color: #999;
+}
+
+.productGallery_thumb{
+    background-color: transparent;
+    width: 85px;
+    padding-right: 15px;
+}
+.productList-thumb{
+    position: relative;
+    display: block;
+    background-color: transparent;
+    box-sizing: border-box;
+}
+.productList-slick{
+    position: relative;
+    display: block;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+.productList-thumb.productList-slick{
+    transform: translate3d(0, 0, 0);
+}
+.track-item{
+    border: 1px solid black;
+    border-radius: 3px;
+    clear: both;
+}
+.productGallery_slider{
+    width: calc( 100% - 85px );
+    position: relative;
+    background-color: transparent;
+    height: 100%;
+}
+
+.product-image{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}

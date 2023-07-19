@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div class="container mb-5" th:fragment="content" style="max-width: 1170px;">
+    <!-- Carousel wrapper -->
+    <div id="carouselMaterialStyle" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <!-- Indicators -->
+            <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselMaterialStyle" data-bs-slide-to="0" class="active"
+                    aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselMaterialStyle" data-bs-slide-to="1"
+                    aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselMaterialStyle" data-bs-slide-to="2"
+                    aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#carouselMaterialStyle" data-bs-slide-to="3"
+                    aria-label="Slide 4"></button>
+        </div>
+
+        <!-- Inner -->
+        <div class="carousel-inner rounded-5 shadow-4-strong">
+            <!-- Single item -->
+            <div class="carousel-item active" data-bs-interval="2500">
+                <img src="https://file.hstatic.net/1000281824/file/13_7462c7eb9c7040c98c0cc776220d00e3.jpg"
+                     class="d-block w-100" alt="Sunset Over the City">
+            </div>
+
+            <!-- Single item -->
+            <div class="carousel-item" data-bs-interval="2500">
+                <img src="https://file.hstatic.net/1000281824/file/1_6724198653724f4dbefef57864d3988c.jpg"
+                     class="d-block w-100" alt="Canyon at Night"/>
+            </div>
+
+            <!-- Single item -->
+            <div class="carousel-item" data-bs-interval="2500">
+                <img src="https://file.hstatic.net/1000281824/file/my_new_project_09_e34e00afd1444789b40a5d7c51375c12.jpg"
+                     class="d-block w-100" alt="Canyon at Night"/>
+            </div>
+
+            <!-- Single item -->
+            <div class="carousel-item">
+                <img src="https://file.hstatic.net/1000281824/file/my_new_project_02_19040f3dc25b4ca3b5691edee57eda68.jpg"
+                     class="d-block w-100" alt="Cliff Above a Stormy Sea"/>
+            </div>
+        </div>
+        <!-- Inner -->
+
+        <!-- Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselMaterialStyle"
+                data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselMaterialStyle"
+                data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+</body>
+</html>

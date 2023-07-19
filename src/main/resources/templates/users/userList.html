@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head_html">
+</head>
+<body>
+<div class="container">
+  <div class="row col-md-10">
+    <h2>List of Registered Users</h2>
+  </div>
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+    <tr>
+      <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each = "user : ${users}">
+      <td th:text = "${user.email}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

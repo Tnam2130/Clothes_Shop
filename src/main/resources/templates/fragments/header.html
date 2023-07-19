@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="header">
+    <header class="sticky-top container-fluid bg-white">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg">
+                <div class="container-fluid">
+                    <a class="navbar-brand" th:href="@{/}">
+                        <img class="img-fluid" style="height: 75px;"
+                             th:src="@{/img/logo.png}"
+                             alt="Degrey">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false"
+                            aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-5 mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" th:href="@{/}">Trang Chủ</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Cửa hàng</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/collection}">Sản phẩm</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Giới Thiệu</a>
+                            </li>
+                        </ul>
+                        <div class="ms-auto d-flex justify-content-center align-content-center">
+<!--                            <span class="fa fa-search form-control-feedback"></span>-->
+<!--                                    <input type="text" class="form-control" name="searchTerm"-->
+<!--                                           placeholder="Tìm kiếm sản phẩm..." autocomplete="off"-->
+<!--                                           style="border-radius: 12px;">-->
+<!--                                    <div class="dropdown-menu" id="searchResults"></div>-->
+<!--                                </div>-->
+                            <div class="form-group has-search">
+                                <span class="fa fa-search form-control-feedback"></span>
+                                <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm..." autocomplete="off" style="border-radius: 12px;">
+                            </div>
+                            </form>
+                            <!-- Cart -->
+                            <a class="ms-3 position-relative" th:href="@{/cart}">
+                                <span class="d-block text-center position-relative" style="top: 8px;">
+                                    <i class="fa-solid fa-cart-shopping fs-3" style="color: #000000;"></i>
+                                </span>
+
+                                <span class="position-absolute translate-middle badge rounded-pill bg-danger"
+                                      style="top: 8px; left: 95%;" th:text="${cartItemCount}">
+                                    <span class="visually-hidden">No product</span>
+                                </span>
+                                <span sec:authorize="!isAuthenticated()" class="position-absolute translate-middle badge rounded-pill bg-danger"
+                                      style="top: 8px; left: 95%;">0
+                                    <span class="visually-hidden">No product</span>
+                                </span>
+                            </a>
+                            <!-- User -->
+                            <ul class="navbar-nav ms-3">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown"
+                                       aria-expanded="false">
+                                        <i class="fa-solid fa-user fs-3"></i>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li sec:authorize="!isAuthenticated()"><a class="dropdown-item"
+                                                                                  th:href="@{/login}">Đăng Nhập</a></li>
+                                        <li sec:authorize="!isAuthenticated()"><a class="dropdown-item"
+                                                                                  th:href="@{/register}">Đăng Ký</a>
+                                        </li>
+                                        <li sec:authorize="isAuthenticated()"><a class="dropdown-item"
+                                                                                 th:href="@{/register}">Đăng Xuất</a>
+                                        </li>
+                                        <!--                                        </div>-->
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+    </header>
+</div>
+</body>
+</html>

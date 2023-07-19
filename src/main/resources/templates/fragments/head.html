@@ -1,0 +1,22 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head_html">
+    <meta charset="UTF-8">
+    <base href="/">
+    <title th:text="${title}"></title>
+    <link rel="icon" href="https://file.hstatic.net/1000281824/file/logo1200_30471c131a2948efaf7c9e9466511f73.png">
+    <!--  Google Font-->
+    <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Text&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Text&display=swap" rel="stylesheet">
+    <!--  bs5-->
+    <link type="text/css" th:href="@{/bootstrapv5/css/bootstrap.min.css}" rel="stylesheet"/>
+    <script th:src="@{/bootstrapv5/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+            integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!--  CSS and JS-->
+    <link type="text/css" rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/app.js}"></script>
+</head>
