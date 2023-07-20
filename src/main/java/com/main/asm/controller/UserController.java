@@ -60,4 +60,20 @@ public class UserController {
         model.addAttribute("title","Danh sách người dùng");
         return "/users/userList";
     }
+
+
+    @GetMapping("/resetpassword")
+    public String resetPassword(){
+        return"/users/rspassword";
+    }
+
+    @PostMapping("/do-resetpassword")
+    public String doResetPassword(Model model,@ModelAttribute("username") String email) {
+        Users newPasswordUser = userService.resetPassword(email);
+        if (newPasswordUser != null) {
+            return "redirect:/login";
+        } else {
+            return "redirect:/resetpassword?error";
+        }
+    }
 }
