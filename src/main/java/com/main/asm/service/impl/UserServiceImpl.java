@@ -1,17 +1,19 @@
 package com.main.asm.service.impl;
 
+import com.main.asm.constant.EmailType;
 import com.main.asm.entity.Role;
 import com.main.asm.entity.UserDto;
 import com.main.asm.entity.Users;
 import com.main.asm.repository.RoleRepository;
 import com.main.asm.repository.UsersRepository;
+import com.main.asm.service.EmailService;
 import com.main.asm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +26,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
 
     private UserDto convertEntityToDto(Users user){
         UserDto userDto = new UserDto();
@@ -45,6 +50,8 @@ public class UserServiceImpl implements UserService {
         //encrypt the password once we integrate spring security
         //user.setPassword(userDto.getPassword());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        emailService.sendEmail(user,user.getEmail(),"", EmailType.WELCOME_TO_WEBSITE);
+
         Role role = roleRepository.findByName("USER");
         if(role == null){
             role = checkRoleExist();
@@ -64,4 +71,18 @@ public class UserServiceImpl implements UserService {
         return users.stream().map(this::convertEntityToDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Users resetPassword(String email) {
+
+        return Optional.ofNullable(findByEmail(email))
+                .map(users -> {
+                    String newPassword = String.valueOf((int) (Math.random()*((999-100)+1))+1000);
+                    users.setPassword(passwordEncoder.encode(newPassword));
+                    emailService.sendEmail(users,email,newPassword, EmailType.FORGOT_PASSWORD);
+                    return userRepository.save(users);
+                }).orElse(null);
+    }
+
+
 }
