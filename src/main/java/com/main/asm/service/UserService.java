@@ -10,6 +10,6 @@ public interface UserService {
     Users findByEmail(String email);
     List<UserDto> findAllUsers();
 
-    Users resetPassword(String email);
+    Users resetPassword(String username,String newPassword);
 }
 
