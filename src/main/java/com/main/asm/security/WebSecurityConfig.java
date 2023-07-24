@@ -33,6 +33,12 @@ public class WebSecurityConfig {
             "/products/**",
             "/place-order",
             "/login",
+            "/send-code",
+            "/do-sendCode",
+            "/check-code",
+            "/do-checkCode",
+            "/resetPassword",
+            "/do-resetPassword",
             "/c/**"
     };
     @Bean
