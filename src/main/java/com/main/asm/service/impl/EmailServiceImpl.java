@@ -16,13 +16,8 @@ public class EmailServiceImpl implements EmailService {
 
     private static final String EMAIL_FORGOT_PASSWORD = "DEGREY ONLINE - NEW PASSWORD";
 
-
-    private final JavaMailSender mailSender;
-
     @Autowired
-    public EmailServiceImpl(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
+    private JavaMailSender mailSender;
 
     @Override
     public void sendEmail(Users recipient,String to,String newPassword, EmailType emailType) {
