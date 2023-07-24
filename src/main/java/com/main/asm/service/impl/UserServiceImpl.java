@@ -27,8 +27,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private EmailService emailService;
+//    @Autowired
+//    private EmailService emailService;
 
     private UserDto convertEntityToDto(Users user){
         UserDto userDto = new UserDto();
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
         //encrypt the password once we integrate spring security
         //user.setPassword(userDto.getPassword());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        emailService.sendEmail(user,user.getEmail(),"", EmailType.WELCOME_TO_WEBSITE);
+//        emailService.sendEmail(user,user.getEmail(),"", EmailType.WELCOME_TO_WEBSITE);
 
         Role role = roleRepository.findByName("USER");
         if(role == null){
@@ -73,15 +73,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Users resetPassword(String email) {
-
+    public Users resetPassword(String email,String newPassword) {
         return Optional.ofNullable(findByEmail(email))
                 .map(users -> {
-                    String newPassword = String.valueOf((int) (Math.random()*((999-100)+1))+1000);
                     users.setPassword(passwordEncoder.encode(newPassword));
-                    emailService.sendEmail(users,email,newPassword, EmailType.FORGOT_PASSWORD);
                     return userRepository.save(users);
                 }).orElse(null);
+
     }
 
 
