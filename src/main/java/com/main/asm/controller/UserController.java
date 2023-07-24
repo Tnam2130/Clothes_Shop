@@ -3,6 +3,7 @@ package com.main.asm.controller;
 import com.main.asm.entity.UserDto;
 import com.main.asm.entity.Users;
 import com.main.asm.repository.UsersRepository;
+import com.main.asm.service.EmailService;
 import com.main.asm.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class UserController {
 
     @Autowired
     UsersRepository userRepository;
+
+    @Autowired
+    EmailService emailService;
 
     @GetMapping("/login")
     public String getLoginForm(Model model) {
@@ -62,18 +66,53 @@ public class UserController {
     }
 
 
-    @GetMapping("/resetpassword")
-    public String resetPassword(){
-        return"/users/rspassword";
+    @GetMapping("/send-code")
+    public String sendCode(){
+        return"/users/sendCode";
     }
 
-    @PostMapping("/do-resetpassword")
-    public String doResetPassword(Model model,@ModelAttribute("username") String email) {
-        Users newPasswordUser = userService.resetPassword(email);
-        if (newPasswordUser != null) {
-            return "redirect:/login";
+    @PostMapping("/do-sendCode")
+    public String doSendCode(@ModelAttribute("username") String username) {
+        Users existUsername = userService.findByEmail(username);
+
+        if (existUsername != null) {
+            emailService.sendCode(username);
+            return "redirect:/check-code?username="+username;
         } else {
-            return "redirect:/resetpassword?error";
+            return "redirect:/send-code?error";
+        }
+    }
+
+    @GetMapping("/check-code")
+    public String checkCode(Model model,@RequestParam(name = "username",defaultValue = "") String username){
+        model.addAttribute("username",username);
+        return"users/checkCode";
+    }
+
+    @PostMapping("/do-checkCode")
+    public String doCheckCode(@ModelAttribute("username") String username,@ModelAttribute("code") String code) {
+        Users users = emailService.getUserByCode(code);
+        if (users != null) {
+            return "redirect:/resetPassword?username="+username;
+        } else {
+            return "redirect:/check-code?error";
+        }
+    }
+
+    @GetMapping("/resetPassword")
+    public String resetPassword(Model model,@RequestParam(name = "username") String username){
+        model.addAttribute("username", username);
+        return "users/resetPassword";
+    }
+    @PostMapping("/do-resetPassword")
+    public String doResetPassword(@ModelAttribute("username") String username,@ModelAttribute("password1") String newPassword,@ModelAttribute("password2") String repeatPassword){
+        if (repeatPassword.equals(newPassword)){
+            userService.resetPassword(username,repeatPassword);
+            System.out.println("ok");
+            return "redirect:/login";
+        }else{
+            System.out.println("no ok");
+            return "redirect:/resetPassword?username="+username+"?error";
         }
     }
 }
