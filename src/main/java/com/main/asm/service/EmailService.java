@@ -6,8 +6,10 @@ import com.main.asm.entity.Users;
 
 public interface EmailService {
 
-    void sendEmail(Users recipient,String to,String newPassword,EmailType emailType);
+    void sendEmail(String to,String code,EmailType emailType);
 
+    void sendCode(String email);
 
-
+    String generateCode();
+    Users getUserByCode(String code);
 }
