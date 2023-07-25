@@ -3,8 +3,11 @@ package com.main.asm.controller;
 import com.main.asm.entity.UserDto;
 import com.main.asm.entity.Users;
 import com.main.asm.repository.UsersRepository;
+import com.main.asm.security.CustomUserDetailsService;
 import com.main.asm.service.EmailService;
 import com.main.asm.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -25,11 +29,18 @@ public class UserController {
 
     @Autowired
     EmailService emailService;
+    @Autowired
+    CustomUserDetailsService customUserDetailsService;
 
     @GetMapping("/login")
     public String getLoginForm(Model model) {
         model.addAttribute("title", "Đăng nhập");
         return "users/login";
+    }
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        customUserDetailsService.logout(request, response);
+        return "redirect:/login"; // Chuyển hướng người dùng về trang đăng nhập sau khi logout
     }
 
     @GetMapping("/register")
