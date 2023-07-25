@@ -3,6 +3,8 @@ package com.main.asm.security;
 import com.main.asm.entity.Role;
 import com.main.asm.entity.Users;
 import com.main.asm.repository.UsersRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,8 +12,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -44,6 +48,12 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .collect(Collectors.toList());
         System.out.println(mapRoles);
         return mapRoles;
+    }
+
+    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+        logoutHandler.logout(request, response,null );
+        response.sendRedirect("/login");
     }
 
 }
