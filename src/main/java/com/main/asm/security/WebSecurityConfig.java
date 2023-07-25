@@ -33,6 +33,7 @@ public class WebSecurityConfig {
             "/products/**",
             "/place-order",
             "/login",
+            "/logout",
             "/send-code",
             "/do-sendCode",
             "/check-code",
