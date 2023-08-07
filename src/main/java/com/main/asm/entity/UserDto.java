@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
+import java.util.Map;
 
 /*
  * DTO: Data Transform Object
@@ -20,10 +24,9 @@ public class UserDto {
     @Email
     private String email;
 
-    @NotEmpty(message = "Cannot get name")
-    private String fullname;
+    @NotEmpty(message = "Tên tài khoản không được để trống")
+    private String username;
 
     @NotEmpty(message = "Password không được để trống")
     private String password;
-
 }

@@ -1,5 +1,6 @@
 package com.main.asm.entity;
 
+import com.main.asm.constant.AuthenticationProvider;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,7 +23,7 @@ public class Users {
     @Column(nullable = false, unique = true)
     private String email;
 
-    private String fullname;
+    private String username;
 
     @Column(name = "pass")
     private String password;
@@ -35,9 +36,9 @@ public class Users {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
     private List<Role> roles = new ArrayList<>();
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "auth_provider")
-    private AuthenticationProvider authProvider;
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "auth_provider")
+//    private AuthenticationProvider authProvider;
 
 
 }

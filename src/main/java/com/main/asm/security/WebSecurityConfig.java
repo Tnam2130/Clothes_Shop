@@ -1,5 +1,8 @@
 package com.main.asm.security;
 
+import com.main.asm.constant.AuthenticationProvider;
+import com.main.asm.entity.UserDto;
+import com.main.asm.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +21,8 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.util.UUID;
 
 
 @Configuration
@@ -64,39 +69,15 @@ public class WebSecurityConfig {
                         .requestMatchers("/users").hasAuthority("ADMIN")
                         .requestMatchers(PUBLIC_RESOURCES).permitAll()
                         .anyRequest().authenticated());
-        http.formLogin(c -> {
-            try {
-                c.loginPage("/login")
-                        .usernameParameter("email")
-                        .permitAll()
-                        .defaultSuccessUrl("/")
-                        .and()
-                        .oauth2Login(oc -> oc.loginPage("/login").userInfoEndpoint(ui -> ui.userService(oauth2LoginHandler()).oidcUserService(oidcLoginHandler())));
-
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-
+        http.formLogin(c -> c.loginPage("/login")
+                .defaultSuccessUrl("/")
+                .failureUrl("/login?error")
+                .permitAll());
         http.logout(c -> c.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .permitAll()
                 .logoutSuccessUrl("/"));
         return http.build();
+
+
     }
-
-    private OAuth2UserService<OidcUserRequest, OidcUser> oidcLoginHandler() {
-        return userRequest -> {
-            OidcUserService delegate = new OidcUserService();
-            return delegate.loadUser(userRequest);
-        };
-    }
-
-    private OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2LoginHandler() {
-        return userRequest -> {
-            DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
-            return delegate.loadUser(userRequest);
-        };
-    }
-
-
 }

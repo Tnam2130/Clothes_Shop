@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService {
         //encrypt the password once we integrate spring security
         //user.setPassword(userDto.getPassword());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setUsername(userDto.getUsername());
 //        emailService.sendEmail(user,user.getEmail(),"", EmailType.WELCOME_TO_WEBSITE);
 
         Role role = roleRepository.findByName("USER");
@@ -80,16 +81,5 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public void processOAuthPostLogin(String username) {
-        Users existUser=userRepository.getUsersByFullname(username);
-        if (existUser==null){
-            Users newUsers=new Users();
-            newUsers.setFullname(username);
-            newUsers.setAuthProvider(AuthenticationProvider.GOOGLE);
-            userRepository.save(newUsers);
-        }
     }
 
-
-}

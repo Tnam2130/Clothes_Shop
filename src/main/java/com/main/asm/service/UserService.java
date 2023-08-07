@@ -9,9 +9,7 @@ public interface UserService {
     void saveUser(UserDto userDto);
     Users findByEmail(String email);
     List<UserDto> findAllUsers();
-
     Users resetPassword(String username,String newPassword);
-    void processOAuthPostLogin(String username);
 
 }
 
