@@ -1,13 +1,14 @@
  create database clothes_shop;
- use cothes_shop;
+ use clothes_shop;
  drop database clothes_shop;
  
 CREATE TABLE USERS (
     USER_ID INT PRIMARY KEY AUTO_INCREMENT,
     EMAIL VARCHAR(100) UNIQUE,
-    FULLNAME VARCHAR(50),
+    FULLNAME VARCHAR(50) not null,
     PASS VARCHAR(500) NOT NULL,
-    ADDRESS VARCHAR(250)
+    ADDRESS VARCHAR(250),
+    provider varchar(15)
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4 COLLATE = UTF8MB4_UNICODE_CI;
 
 CREATE TABLE roles (
@@ -112,6 +113,8 @@ select count(img.image_url) from product_images img inner join products pd on im
 select u1_0.user_id,u1_0.address,u1_0.email,u1_0.fullname,u1_0.pass from users u1_0 where u1_0.email='namndt21986@fpt.edu.vn';
 select r1_0.user_id,r1_1.role_id,r1_1.name from users_roles r1_0 join roles r1_1 on r1_1.role_id=r1_0.role_id where r1_0.user_id=1;
 
-delete from users_roles where user_id=3;
+delete from users where user_id=3;
+ALTER TABLE users
+RENAME COLUMN provider To auth_provider;
 
- update users_roles set role_id=2 where user_id=1;
+ update users_roles set role_id=2 where user_id=2;
