@@ -11,5 +11,7 @@ public interface UserService {
     List<UserDto> findAllUsers();
 
     Users resetPassword(String username,String newPassword);
+    void processOAuthPostLogin(String username);
+
 }
 

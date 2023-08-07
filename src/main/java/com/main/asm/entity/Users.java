@@ -23,6 +23,7 @@ public class Users {
     private String email;
 
     private String fullname;
+
     @Column(name = "pass")
     private String password;
 
@@ -33,5 +34,10 @@ public class Users {
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
     private List<Role> roles = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider")
+    private AuthenticationProvider authProvider;
+
 
 }

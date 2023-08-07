@@ -20,8 +20,10 @@ public class UserDto {
     @Email
     private String email;
 
+    @NotEmpty(message = "Cannot get name")
+    private String fullname;
+
     @NotEmpty(message = "Password không được để trống")
     private String password;
-
 
 }

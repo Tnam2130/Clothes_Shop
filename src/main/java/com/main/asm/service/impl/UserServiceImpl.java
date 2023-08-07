@@ -1,12 +1,10 @@
 package com.main.asm.service.impl;
 
-import com.main.asm.constant.EmailType;
 import com.main.asm.entity.Role;
 import com.main.asm.entity.UserDto;
 import com.main.asm.entity.Users;
 import com.main.asm.repository.RoleRepository;
 import com.main.asm.repository.UsersRepository;
-import com.main.asm.service.EmailService;
 import com.main.asm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -80,6 +78,17 @@ public class UserServiceImpl implements UserService {
                     return userRepository.save(users);
                 }).orElse(null);
 
+    }
+
+    @Override
+    public void processOAuthPostLogin(String username) {
+        Users existUser=userRepository.getUsersByFullname(username);
+        if (existUser==null){
+            Users newUsers=new Users();
+            newUsers.setFullname(username);
+            newUsers.setAuthProvider(AuthenticationProvider.GOOGLE);
+            userRepository.save(newUsers);
+        }
     }
 
 

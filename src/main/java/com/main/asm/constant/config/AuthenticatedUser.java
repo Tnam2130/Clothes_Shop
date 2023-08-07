@@ -1,4 +1,4 @@
-package com.main.asm.config;
+package com.main.asm.constant.config;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -12,6 +12,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-@PreAuthorize("hasRole('ADMIN')")
-public @interface AdminOnly {
-}
+@PreAuthorize("isAuthenticated()")
+public @interface AuthenticatedUser {}
