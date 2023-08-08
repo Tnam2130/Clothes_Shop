@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
+
 @Controller
 public class UserController {
     @Autowired
@@ -37,6 +38,7 @@ public class UserController {
         model.addAttribute("title", "Đăng nhập");
         return "users/login";
     }
+
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         customUserDetailsService.logout(request, response);
@@ -45,7 +47,7 @@ public class UserController {
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
-        UserDto user=new UserDto();
+        UserDto user = new UserDto();
         model.addAttribute("title", "Đăng ký");
         model.addAttribute("user", user);
         return "users/register";
@@ -53,33 +55,33 @@ public class UserController {
 
     @PostMapping("/register/save")
     public String register(@Valid @ModelAttribute("user") UserDto user, BindingResult result, Model model) {
-        Users existingUser=userService.findByEmail(user.getEmail());
+        Users existingUser = userService.findByEmail(user.getEmail());
         System.out.println(user.getEmail());
-        if (existingUser != null){
-            result.rejectValue("email",null,
+        if (existingUser != null) {
+            result.rejectValue("email", null,
                     "Email đã được đăng ký!");
         }
-        if(result.hasErrors()){
-            model.addAttribute("user",user);
+        if (result.hasErrors()) {
+            model.addAttribute("user", user);
             return "/users/register";
         }
         userService.saveUser(user);
         return "redirect:/login?success";
     }
 
-//    Xử lý danh sách người dùng
+    //    Xử lý danh sách người dùng
     @GetMapping("/users")
-    public String users(Model model){
-        List<UserDto> users= userService.findAllUsers();
-        model.addAttribute("users",users);
-        model.addAttribute("title","Danh sách người dùng");
+    public String users(Model model) {
+        List<UserDto> users = userService.findAllUsers();
+        model.addAttribute("users", users);
+        model.addAttribute("title", "Danh sách người dùng");
         return "/users/userList";
     }
 
 
     @GetMapping("/send-code")
-    public String sendCode(){
-        return"/users/sendCode";
+    public String sendCode() {
+        return "/users/sendCode";
     }
 
     @PostMapping("/do-sendCode")
@@ -88,42 +90,64 @@ public class UserController {
 
         if (existUsername != null) {
             emailService.sendCode(username);
-            return "redirect:/check-code?username="+username;
+            return "redirect:/check-code?username=" + username;
         } else {
             return "redirect:/send-code?error";
         }
     }
 
     @GetMapping("/check-code")
-    public String checkCode(Model model,@RequestParam(name = "username",defaultValue = "") String username){
-        model.addAttribute("username",username);
-        return"users/checkCode";
+    public String checkCode(Model model, @RequestParam(name = "username", defaultValue = "") String username) {
+        model.addAttribute("username", username);
+        return "users/checkCode";
     }
 
     @PostMapping("/do-checkCode")
-    public String doCheckCode(@ModelAttribute("username") String username,@ModelAttribute("code") String code) {
+    public String doCheckCode(@ModelAttribute("username") String username, @ModelAttribute("code") String code) {
         Users users = emailService.getUserByCode(code);
         if (users != null) {
-            return "redirect:/resetPassword?username="+username;
+            return "redirect:/resetPassword?username=" + username;
         } else {
             return "redirect:/check-code?error";
         }
     }
 
     @GetMapping("/resetPassword")
-    public String resetPassword(Model model,@RequestParam(name = "username") String username){
+    public String resetPassword(Model model, @RequestParam(name = "username") String username) {
         model.addAttribute("username", username);
         return "users/resetPassword";
     }
+
     @PostMapping("/do-resetPassword")
-    public String doResetPassword(@ModelAttribute("username") String username,@ModelAttribute("password1") String newPassword,@ModelAttribute("password2") String repeatPassword){
-        if (repeatPassword.equals(newPassword)){
-            userService.resetPassword(username,repeatPassword);
+    public String doResetPassword(@ModelAttribute("username") String username, @ModelAttribute("password1") String newPassword, @ModelAttribute("password2") String repeatPassword) {
+        if (repeatPassword.equals(newPassword)) {
+            userService.resetPassword(username, repeatPassword);
             System.out.println("ok");
             return "redirect:/login";
-        }else{
+        } else {
             System.out.println("no ok");
-            return "redirect:/resetPassword?username="+username+"?error";
+            return "redirect:/resetPassword?username=" + username + "?error";
         }
     }
+
+    @GetMapping("/profile")
+    public String viewProfile(Model model) {
+        return "/users/profile";
+    }
+
+    @RequestMapping("/user/update")
+    public String update(@ModelAttribute("user") Users user,@ModelAttribute("username")String username,
+                         @ModelAttribute("address")String address,
+                         @ModelAttribute("email")String email
+    ) {
+        Users existUsername = userService.findByEmail(email);
+        existUsername.setUsername(username);
+        existUsername.setEmail(email);
+        existUsername.setAddress(address);
+        userRepository.save(existUsername);
+
+        return "redirect:/index?" + user.getUsername();
+    }
+
+
 }

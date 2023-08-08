@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head_html">
+</head>
+
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="row">
+    <div class="col-md-12 m-b-30">
+        <!-- begin page title -->
+        <div class="d-block d-lg-flex flex-nowrap align-items-center">
+            <div class="page-title mr-4 pr-4 border-right">
+                <h1>User</h1>
+            </div>
+
+            <div class="ml-auto d-flex align-items-center secondary-menu text-center">
+
+            </div>
+        </div>
+        <!-- end page title -->
+    </div>
+</div>
+<!-- end row -->
+<!-- begin row -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-statistics">
+            <div class="card-header">
+                <div class="card-heading">
+                    <h4 class="card-title">Edit Account</h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-8">
+                        <form th:action="@{/user/update}" name="frmAccount">
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input name="username"   required type="text" class="form-control">
+
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input name="email"   required type="email" class="form-control">
+
+                            </div>
+                            <div class="form-group">
+                                <label>adress</label>
+                                <input name="address"  required type="text" class="form-control">
+
+                            </div>
+                            <button  class="btn btn-secondary" >uddate</button>
+                           <!-- <button  class="btn btn-secondary">Reset</button>-->
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
