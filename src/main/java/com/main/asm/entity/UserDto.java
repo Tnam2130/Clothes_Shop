@@ -26,7 +26,6 @@ public class UserDto implements UserDetails {
     private Long id;
 
     @NotEmpty(message = "Email không được để trống")
-    @Email
     private String email;
 
     @NotEmpty(message = "Tên tài khoản không được để trống")

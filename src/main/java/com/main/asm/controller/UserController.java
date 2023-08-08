@@ -11,13 +11,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 
 @Controller
@@ -131,20 +135,22 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public String viewProfile(Model model) {
-        return "/users/profile";
+    public String viewProfile(Model model, Principal principal) {
+        String userEmail= principal.getName();
+        System.out.println(userEmail+" hello");
+        model.addAttribute("user",userService.findByEmail(userEmail));
+        return "users/profile";
     }
 
     @RequestMapping("/user/update")
-    public String update(@ModelAttribute("user") Users user,@ModelAttribute("username")String username,
-                         @ModelAttribute("address")String address,
-                         @ModelAttribute("email")String email
+    public String update(@ModelAttribute("user") Users user, @ModelAttribute("username") String username,
+                         @ModelAttribute("email") String email,
+                         @ModelAttribute("address") String address
     ) {
-        Users existUsername = userService.findByEmail(email);
-        existUsername.setUsername(username);
-        existUsername.setEmail(email);
-        existUsername.setAddress(address);
-        userRepository.save(existUsername);
+        Users existUser = userService.findByEmail(email);
+        existUser.setUsername(username);
+        existUser.setAddress(address);
+        userRepository.save(existUser);
 
         return "redirect:/index?" + user.getUsername();
     }

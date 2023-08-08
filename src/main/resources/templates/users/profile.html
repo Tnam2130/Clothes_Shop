@@ -37,17 +37,17 @@
                         <form th:action="@{/user/update}" name="frmAccount">
                             <div class="form-group">
                                 <label>Username</label>
-                                <input name="username"   required type="text" class="form-control">
+                                <input name="username" th:placeholder="${user.getUsername()}" required type="text" class="form-control">
 
                             </div>
                             <div class="form-group">
                                 <label>Email</label>
-                                <input name="email"   required type="email" class="form-control">
+                                <input name="email" th:placeholder="${user.getEmail()}" required type="email" class="form-control" disabled>
 
                             </div>
                             <div class="form-group">
                                 <label>adress</label>
-                                <input name="address"  required type="text" class="form-control">
+                                <input name="address" th:placeholder="${user.getAddress()}" required type="text" class="form-control">
 
                             </div>
                             <button  class="btn btn-secondary" >uddate</button>
