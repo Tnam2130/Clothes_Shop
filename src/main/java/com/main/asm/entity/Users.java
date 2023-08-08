@@ -36,9 +36,9 @@ public class Users {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
     private List<Role> roles = new ArrayList<>();
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "auth_provider")
-//    private AuthenticationProvider authProvider;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider")
+    private AuthenticationProvider authProvider;
 
 
 }

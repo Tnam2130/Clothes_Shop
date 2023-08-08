@@ -1,35 +1,37 @@
 package com.main.asm.security;
 
-import com.main.asm.constant.AuthenticationProvider;
-import com.main.asm.entity.UserDto;
-import com.main.asm.entity.Users;
+import com.main.asm.security.oauth.CustomOAuth2User;
+import com.main.asm.security.oauth.CustomOAuth2UserService;
+import com.main.asm.service.UserService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
-import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import java.util.UUID;
-
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfig {
 
+    @Autowired
+    CustomOAuth2UserService oAuth2UserService;
+
+    @Autowired
+    UserService userService;
 
     private static final String[] PUBLIC_RESOURCES = {
             "/resources/**",
@@ -69,15 +71,33 @@ public class WebSecurityConfig {
                         .requestMatchers("/users").hasAuthority("ADMIN")
                         .requestMatchers(PUBLIC_RESOURCES).permitAll()
                         .anyRequest().authenticated());
-        http.formLogin(c -> c.loginPage("/login")
-                .defaultSuccessUrl("/")
-                .failureUrl("/login?error")
-                .permitAll());
+        http.formLogin(c -> {
+                    try {
+                        c.loginPage("/login")
+                                .defaultSuccessUrl("/")
+                                .permitAll()
+                                .and()
+                                .oauth2Login().loginPage("/login").userInfoEndpoint().userService(oAuth2UserService)
+                                .and()
+                                .successHandler(new AuthenticationSuccessHandler() {
+                                    @Override
+                                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                                        DefaultOidcUser oauthUser= (DefaultOidcUser) authentication.getPrincipal();
+                                        String email= oauthUser.getEmail();
+                                        System.out.println(email);
+                                        userService.processOAuthPostLogin(email);
+                                        response.sendRedirect("/");
+                                    }
+                                })
+                                .failureUrl("/login?error");
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        );
         http.logout(c -> c.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .permitAll()
                 .logoutSuccessUrl("/"));
         return http.build();
-
-
     }
 }

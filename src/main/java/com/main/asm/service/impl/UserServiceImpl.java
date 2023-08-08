@@ -1,5 +1,6 @@
 package com.main.asm.service.impl;
 
+import com.main.asm.constant.AuthenticationProvider;
 import com.main.asm.entity.Role;
 import com.main.asm.entity.UserDto;
 import com.main.asm.entity.Users;
@@ -81,5 +82,18 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public void processOAuthPostLogin(String username) {
+        Users existUser = userRepository.getUserByUsername(username);
+        if (existUser == null){
+            Users newUser=new Users();
+            newUser.setUsername(username);
+            newUser.setEmail(username);
+            newUser.setAuthProvider(AuthenticationProvider.GOOGLE);
+            userRepository.save(newUser);
+
+        }
     }
+
+}
 

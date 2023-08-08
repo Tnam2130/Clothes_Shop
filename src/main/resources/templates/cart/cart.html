@@ -51,12 +51,11 @@
                 </button>
             </div>
         </form>
-        <form th:action="@{/cart/order}" method="post">
+        <form th:action="@{/order}" method="post">
             <div class="text-end mt-4">
                 <h5>Total: <span th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'DEFAULT')} + ' &#x20AB;'"
                                  id="totalPrice"></span></h5>
                 <input type="hidden" name="total" th:value="${total}"/>
-
                 <!--            <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Thanh-->
                 <!--                toán-->
                 <!--            </button>-->

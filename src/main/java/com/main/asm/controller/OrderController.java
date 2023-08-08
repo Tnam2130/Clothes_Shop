@@ -12,17 +12,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class OrderController {
-    @Autowired
-    private UserService userService;
     @Autowired
     ProductService productService;
     @Autowired
@@ -30,7 +30,7 @@ public class OrderController {
 
     @PostMapping("/place-order")
     public String placeOrder(@ModelAttribute("order") Orders order, @RequestParam("productId") List<Long> productIds,
-                             @RequestParam("quantity") List<Integer> quantities, Model model) {
+                             @RequestParam("quantity") List<Integer> quantities, Model model, Principal principal) {
         List<OrderItems> orderItems = new ArrayList<>();
         Long productId = (long) productIds.size();
         Products products = productService.findById(productId);
@@ -45,24 +45,28 @@ public class OrderController {
         System.out.println(productIds);
         try {
             model.addAttribute("product", products);
-            orderService.createOrder(orderItems);
+            if (principal != null) {
+                String userEmail = principal.getName();
+                System.out.println(userEmail);
+                orderService.createOrder(orderItems, order, userEmail);
+            }
             model.addAttribute("successMessage", "Đặt hàng");
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Đặt hàng");
         }
         return "redirect:/cart";
     }
+
     @PostMapping("/order")
-    public String placeOrder(@ModelAttribute("order") Orders order, @RequestParam("total") BigDecimal total, Authentication authentication){
-        System.out.println(order);
-        String username = authentication.getName();
-        Users user = userService.findByEmail(username);
-        Orders newOrder= new Orders();
-        newOrder.setUsers(user);
-        newOrder.setTotal(total);
-        orderService.saveOrder(newOrder);
-        System.out.println(newOrder);
-        System.out.println(username);
+    public String placeOrder(@ModelAttribute("order") Orders order, @RequestParam("total") BigDecimal total,
+                             Principal principal) {
+        System.out.println(order + "abca");
+
+        if (principal != null) {
+            String userEmail = principal.getName();
+            order.setTotal(total);
+            orderService.saveOrder(order, userEmail);
+        }
         return "redirect:/cart?success";
     }
 }

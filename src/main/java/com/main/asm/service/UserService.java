@@ -10,6 +10,7 @@ public interface UserService {
     Users findByEmail(String email);
     List<UserDto> findAllUsers();
     Users resetPassword(String username,String newPassword);
+    void processOAuthPostLogin(String username);
 
 }
 

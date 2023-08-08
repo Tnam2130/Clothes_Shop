@@ -30,5 +30,4 @@ public class OrderItems {
     private BigDecimal price;
     @JoinColumn(name = "status")
     private boolean status=true;
-
 }
